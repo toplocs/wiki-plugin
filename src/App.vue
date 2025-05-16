@@ -10,7 +10,7 @@ import { ref, inject, provide } from 'vue';
 import { useRoute } from 'vue-router';
 import WikiView from './views/WikiView.vue';
 import WikiCreateView from './views/WikiCreateView.vue';
-import wikiProvider from './composables/wikiProvider';
+import { wikiProvider } from './composables/wikiProvider';
 
 const tab = ref('Wiki');
 

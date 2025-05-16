@@ -6,6 +6,8 @@ export function wikiProvider(
 ) {
   const pages = ref([]);
 
+  const wiki = ref();
+
   const createPage = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
     const email = data.email.toLowerCase();
@@ -53,13 +55,13 @@ export function wikiProvider(
 
   provide('wiki', {
     wiki,
-    createWiki,
-    editWiki,
-    removeWiki,
+    createPage,
+    editPage,
+    removePage,
   });
 }
 
-export function useProfile() {
+export function useWiki() {
   const data = inject('wiki');
 
   if (!data) {

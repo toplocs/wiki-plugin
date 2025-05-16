@@ -24,16 +24,14 @@ import WikiPlugin from '@/components/Main.vue';
 
 const apiURL = import.meta.env.VITE_API_URL;
 const route = useRoute();
-const profile = inject('profile');
-const interest = inject('interest');
-const location = inject('location');
-const tab = inject('tab');
 const wikiId = ref('');
 const wikiPages = ref([]);
 const href = computed(() => {
   const params = new URLSearchParams();
+  /*
   if (interest.value) params.append('interest', interest.value.id);
   if (location.value) params.append('location', location.value.id);
+  */
 
   return `/wiki/create${params.toString() ? '?' + params.toString() : ''}`;
 });
