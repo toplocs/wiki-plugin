@@ -6,7 +6,7 @@ const {
   updateWiki,
   getWikiById,
   getWikiPages,
-} = require('../actions/wiki');
+} = require('./actions');
 
 const router = express.Router();
 const upload = multer();

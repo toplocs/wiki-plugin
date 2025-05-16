@@ -32,11 +32,11 @@
             />
           </div>
 
-          <div class="mb-2 max-w-[50%]">
+          <div class="mb-2">
             <AddInterests v-model="interests" />
           </div>
 
-          <div class="mb-2  max-w-[50%]">
+          <div class="mb-2">
             <AddLocations v-model="locations" />
           </div>
 
@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import '../assets/main.css';
 import axios from 'axios';
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Card from '@/components/common/Card.vue';
 import Container from '@/components/common/Container.vue';
@@ -81,10 +81,11 @@ const props = defineProps({
   }
 });
 const apiURL = import.meta.env.VITE_API_URL;
+const shellURL = import.meta.env.VITE_SHELL_API_URL;
 const route = useRoute();
 const form = ref<HTMLFormElement | null>(null);
-const interests = ref([props.interest]);
-const locations = ref([props.location]);
+const interests = ref([]);
+const locations = ref([]);
 const successMessage = ref('');
 const errorMessage = ref('');
 const content = ref(
@@ -126,8 +127,30 @@ const content = ref(
   `
 );
 
+const fetchInterest = async (id: string) => {
+  try {
+    const response = await axios.get(`${shellURL}/api/interest/byId/${id}`);
+
+    return response.data
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const fetchLocation = async (id: string) => {
+  try {
+    const response = await axios.get(`${shellURL}/api/location/byId/${id}`);
+
+    return response.data
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 const onSubmit = async () => {
   try {
+    if (successMessage.value.length) return;
     const formData = new FormData(form.value ?? undefined);
     formData.append('content', JSON.stringify(content.value));
     formData.append('interests', JSON.stringify(interests.value));
@@ -141,6 +164,15 @@ const onSubmit = async () => {
     errorMessage.value = error.response.data;
   }
 }
+
+onMounted(async () => {
+  if (props.interest.length) {
+    interests.value.push(await fetchInterest(props.interest));
+  }
+  if (props.location.length) {
+    locations.value.push(await fetchLocation(props.location));
+  }
+});
 
 axios.defaults.baseURL = apiURL;
 </script>

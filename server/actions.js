@@ -1,4 +1,4 @@
-const prisma = require('../lib/prisma.js');
+const prisma = require('./lib/prisma.js');
 
 async function findWiki(query) {
   try {
@@ -23,16 +23,26 @@ const createWiki = async (
   formData,
 ) => {
   try {
+    const interests = JSON.parse(formData.interests);
+    const locations = JSON.parse(formData.locations);
+    if (!interests.length && !locations.length) {
+      throw new Error('The wiki room needs at leats one reference point');
+    }
     if (formData.title.length < 3) throw new Error('The title is too short');
     const wiki = await prisma.wiki.create({
       data: {
         title: formData.title,
         content: formData.content,
-        locations: JSON.parse(formData.locations),
-        interests: JSON.parse(formData.interests),
+        ids: [
+          ...interests.map(x => x.id),
+          ...locations.map(x => x.id)
+        ],
+        interests: interests,
+        locations: locations,
       },
     });
-    console.log(`Wiki ${wiki.title} has been created!`)
+    console.log(`Wiki ${wiki.title} has been created!`);
+    console.log(wiki);
 
     return { success: wiki };
   } catch (e) {
@@ -80,10 +90,7 @@ const getWikiPages = async (params) => {
   try {
     const wikis = await prisma.wiki.findMany({
       where: {
-        OR: [
-          { interests: { has: params?.prop } },
-          { locations: { has: params?.prop } },
-        ]
+        ids: { has: params.prop }
       },
       select: {
         id: true,

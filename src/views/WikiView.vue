@@ -32,8 +32,8 @@ const wikiId = ref('');
 const wikiPages = ref([]);
 const href = computed(() => {
   const params = new URLSearchParams();
-  if (interest.value) params.append('interest', interest.value.title);
-  if (location.value) params.append('location', location.value.title);
+  if (interest.value) params.append('interest', interest.value.id);
+  if (location.value) params.append('location', location.value.id);
 
   return `/wiki/create${params.toString() ? '?' + params.toString() : ''}`;
 });
@@ -48,23 +48,13 @@ const fetchWikiPages = async (prop: String) => {
   }
 }
 
-const fetchWikiById = async (id: String) => {
-  try {
-    const response = await axios.get(`/api/wiki/byId/${id}`);
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 const selectWikiPage = (id: String) => {
   wikiId.value = id;
 }
 
 onMounted(async () => {
   wikiPages.value = await fetchWikiPages(
-    interest.value?.title || location.value?.title
+    interest.value?.id || location.value?.id
   );
   if (wikiPages.value.length) {
     wikiId.value = wikiPages.value[0].id;

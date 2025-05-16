@@ -2,69 +2,73 @@
   <div class="p-6 border rounded-lg bg-gray-50 border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white">
     <Title>{{ wiki?.title }}</Title>
 
-    <div v-if="wiki?.interests.length">
-      <div class="mt-2 flex flex-wrap gap-2">
-        <span v-for="interest in wiki?.interests">
-          <InterestBadge
-            :key="interest"
-            :title="interest"
-          />
-        </span>
-      </div>
-    </div>
-
-    <div v-if="wiki?.locations.length">
-      <div class="mt-2 flex flex-wrap gap-2">
-        <span v-for="location in wiki?.locations">
-          <LocationBadge
-            :key="location"
-            :title="location"
-          />
-        </span>
-      </div>
-    </div>
-
-    <div v-if="isEditing" class="mt-4 wiki-editor">
-      <Callout v-if="successMessage" color="green">
-        {{ successMessage }}
-      </Callout>
-      <Callout v-if="errorMessage" color="red">
-        {{ errorMessage }}
-      </Callout>
-
-      <form
-        ref="form"
-        @submit.prevent="onSubmit"
-      >
-        <input type="hidden" name="wikiId" :value="wiki?.id" />
-
-        <WikiEdit v-model="content" />
-      
-        <div class="mt-2 space-x-2">
-          <button
-            type="submit"
-            class="px-4 py-2 rounded font-semibold transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white"
-          > Save
-          </button>
-
-           <button
-            type="button"
-            class="px-4 py-2 rounded font-semibold transition-colors duration-200 bg-gray-500 hover:bg-gray-600 text-white"
-            @click.prevent="cancelEdit"
-          > Cancel
-          </button>
+    <div v-if="wikiId">
+      <div v-if="wiki?.interests.length">
+        <div class="mt-2 flex flex-wrap gap-2">
+          <span v-for="interest in wiki?.interests">
+            <InterestBadge
+              :key="interest.id"
+              :title="interest.title"
+            />
+          </span>
         </div>
-      </form>
+      </div>
+
+      <div v-if="wiki?.locations.length">
+        <div class="mt-2 flex flex-wrap gap-2">
+          <span v-for="location in wiki?.locations">
+            <LocationBadge
+              :key="location.id"
+              :title="location.title"
+            />
+          </span>
+        </div>
+      </div>
+
+      <div v-if="isEditing" class="mt-4 wiki-editor">
+        <Callout v-if="successMessage" color="green">
+          {{ successMessage }}
+        </Callout>
+        <Callout v-if="errorMessage" color="red">
+          {{ errorMessage }}
+        </Callout>
+
+        <form
+          ref="form"
+          @submit.prevent="onSubmit"
+        >
+          <input type="hidden" name="wikiId" :value="wiki?.id" />
+
+          <WikiEdit v-model="content" />
+        
+          <div class="mt-2 space-x-2">
+            <button
+              type="submit"
+              class="px-4 py-2 rounded font-semibold transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white"
+            > Save
+            </button>
+
+             <button
+              type="button"
+              class="px-4 py-2 rounded font-semibold transition-colors duration-200 bg-gray-500 hover:bg-gray-600 text-white"
+              @click.prevent="cancelEdit"
+            > Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div v-else class="wiki-display">
+        <div v-html="content" className="mt-4 custom-editor"></div>
+        <button
+          class="mt-4 px-4 py-2 rounded font-semibold transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white"
+          @click="editContent"
+        > Edit the Wiki
+        </button>
+      </div>
     </div>
 
-    <div v-else class="wiki-display">
-      <div v-html="content" className="mt-4 custom-editor"></div>
-      <button
-        class="mt-4 px-4 py-2 rounded font-semibold transition-colors duration-200 bg-green-500 hover:bg-green-600 text-white"
-        @click="editContent"
-      > Edit the Wiki
-      </button>
-    </div>
+    <span v-else>There is no wiki yet</span>
   </div>
 </template>
 

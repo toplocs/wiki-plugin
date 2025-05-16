@@ -14,7 +14,10 @@ import WikiCreateView from './views/WikiCreateView.vue';
 
 const apiURL = import.meta.env.VITE_API_URL;
 const tab = ref('Wiki');
-const interest = ref({ title: 'test' });
+const interest = ref({
+  id: '9138e908-b6e3-4bfa-b34f-960a0e703500',
+  title: 'Test'
+});
 const location = ref(null);
 
 provide('tab', tab);
