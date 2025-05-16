@@ -11,6 +11,8 @@ chain.once(data => {
 			url: 'http://localhost:3002',
 		});
 		gun.get('plugins').set(node);
+
+		console.log('Wiki plugin has been added to the gun plugin list')
 	}
 });
 
