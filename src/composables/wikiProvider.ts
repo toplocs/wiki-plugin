@@ -4,25 +4,19 @@ import gun from '../gun';
 export function wikiProvider(
   instance: string,
 ) {
+  const wiki = ref(); //remove
+  const page = ref(1);
   const pages = ref([]);
-
-  const wiki = ref();
 
   const createPage = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
-    const email = data.email.toLowerCase();
-    const hash = CryptoJS.SHA256(email).toString(CryptoJS.enc.Hex);
-    wiki.value = {
-      ...data,
-      id: id,
-      image: `https://gravatar.com/avatar/${hash}`,
-    }
+    pages.value.push(data);
 
-    const node = gun.user().get(`wiki/${id}`).put(wiki.value);
-    gun.user().get('wikis').set(node);
-    gun.get('wikis').get(id).set(node);
+    const node = gun.get(`wiki-plugin/${instance}/${page}`).put(data);
+    gun.get('wikis').get(instance).get(page).set(node);
+    console.log(pages.value)
 
-    return wiki.value;
+    return node;
   }
 
   const editPage = async (data: Profile) => {
@@ -54,7 +48,8 @@ export function wikiProvider(
   });
 
   provide('wiki', {
-    wiki,
+    page,
+    pages,
     createPage,
     editPage,
     removePage,

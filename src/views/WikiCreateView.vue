@@ -69,6 +69,7 @@ import TextInput from '@/components/common/TextInput.vue';
 import AddInterests from '@/components/AddInterests.vue';
 import AddLocations from '@/components/AddLocations.vue';
 import WikiEdit from '@/components/WikiEdit.vue';
+import { useWiki } from '@/composables/wikiProvider';
 
 const props = defineProps({
   interest: {
@@ -80,11 +81,10 @@ const props = defineProps({
     default: '',
   }
 });
-const apiURL = import.meta.env.VITE_API_URL;
-const shellURL = import.meta.env.VITE_SHELL_API_URL;
 const route = useRoute();
+const { pages, createPage } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
-const interests = ref([]);
+const topics = ref([]);
 const locations = ref([]);
 const successMessage = ref('');
 const errorMessage = ref('');
@@ -127,38 +127,13 @@ const content = ref(
   `
 );
 
-const fetchInterest = async (id: string) => {
-  try {
-    const response = await axios.get(`${shellURL}/api/interest/byId/${id}`);
-
-    return response.data
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-const fetchLocation = async (id: string) => {
-  try {
-    const response = await axios.get(`${shellURL}/api/location/byId/${id}`);
-
-    return response.data
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-
 const onSubmit = async () => {
   try {
     if (successMessage.value.length) return;
     const formData = new FormData(form.value ?? undefined);
     formData.append('content', JSON.stringify(content.value));
-    formData.append('interests', JSON.stringify(interests.value));
-    formData.append('locations', JSON.stringify(locations.value));
-    const response = await axios.post(`/api/wiki`, formData);
+    const node = await createPage(formData);
     successMessage.value = 'Wiki content was saved successfully!';
-    
-    return response.data;
   } catch (error) {
     console.error(error);
     errorMessage.value = error.response.data;
@@ -166,13 +141,8 @@ const onSubmit = async () => {
 }
 
 onMounted(async () => {
-  if (props.interest.length) {
-    interests.value.push(await fetchInterest(props.interest));
-  }
-  if (props.location.length) {
-    locations.value.push(await fetchLocation(props.location));
-  }
+
 });
 
-axios.defaults.baseURL = apiURL;
+//axios.defaults.baseURL = apiURL;
 </script>

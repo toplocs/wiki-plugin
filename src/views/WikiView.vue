@@ -51,13 +51,15 @@ const selectWikiPage = (id: String) => {
 }
 
 onMounted(async () => {
-  wikiPages.value = await fetchWikiPages(
+  /*wikiPages.value = await fetchWikiPages(
     interest.value?.id || location.value?.id
   );
   if (wikiPages.value.length) {
     wikiId.value = wikiPages.value[0].id;
   }
+
   tab.value = 'Wiki';  
+  */
 });
 
 axios.defaults.baseURL = apiURL;
