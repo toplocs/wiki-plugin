@@ -2,10 +2,10 @@
   <div className="mb-4 min-w-[200px]">
     <Title>Wiki pages:</Title>
     <WikiListItem
-      v-for="page of wikiPages"
+      v-for="page of pages"
       :key="page.id"
       :title="page.title"
-      @click="() => selectWikiPage(page.id)"
+      @click="() => handleSelect(page)"
     />
     <router-link
       :to="href"
@@ -17,25 +17,15 @@
 
 <script setup lang="ts">
 import '../assets/main.css';
-import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Title from './common/Title.vue';
 import WikiListItem from './WikiListItem.vue';
+import { useWiki } from '@/composables/wikiProvider';
 
-const props = defineProps({
-  wikiPages: {
-    type: Array,
-    default: [],
-  },
-  href: {
-    type: String,
-    default: '',
-  }
-});
-const emit = defineEmits(['selectWikiPage']);
+const { pages, setPage } = useWiki();
 
-const selectWikiPage = (id: String) => {
-  emit('selectWikiPage', id);
+const handleSelect = async (data: Object) => {
+  const result = await setPage(data.page);
 }
 </script>

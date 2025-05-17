@@ -73,59 +73,20 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { ref, computed, watchEffect } from 'vue';
 import Title from '@/components/common/Title.vue';
 import Callout from '@/components/common/Callout.vue';
 import LocationBadge from '@/components/badges/LocationBadge.vue';
 import InterestBadge from '@/components/badges/InterestBadge.vue';
 import WikiEdit from './WikiEdit.vue';
+import { useWiki } from '@/composables/wikiProvider';
 
-const props = defineProps({
-  wikiId: {
-    type: String,
-    required: true,
-  }
-});
+const { wiki } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
 const successMessage = ref('');
 const errorMessage = ref('');
 const isEditing = ref(false);
-const wiki = ref(null);
 const content = ref(null);
-
-const editContent = () => {
-  isEditing.value = true;
-};
-
-const cancelEdit = () => {
-  isEditing.value = false;
-};
-
-
-const fetchWiki = async (id: String) => {
-  try {
-    const response = await axios.get(`/api/wiki/byId/${id}`);
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-const onSubmit = async () => {
-  try {
-    const formData = new FormData(form.value ?? undefined);
-    formData.append('content', JSON.stringify(content.value));
-    const response = await axios.put(`/api/wiki`, formData);
-    successMessage.value = 'Wiki content was saved successfully!';
-    
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    errorMessage.value = error.response.data;
-  }
-}
 
 watchEffect(async () => {
   if (props.wikiId) wiki.value = await fetchWiki(props.wikiId);

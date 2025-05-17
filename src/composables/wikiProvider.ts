@@ -1,22 +1,34 @@
-import { ref, inject, provide, watch, onMounted, onUnmounted } from 'vue';
+import { ref, inject, provide, computed, onMounted, onUnmounted } from 'vue';
 import gun from '../gun';
 
 export function wikiProvider(
   instance: string,
 ) {
-  const wiki = ref(); //remove
-  const page = ref(1);
+  const wiki = ref(null);
   const pages = ref([]);
+  const count = computed(() => pages.value.length)
 
   const createPage = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
-    pages.value.push(data);
+    pages.value.push({
+      page: count.value,
+      ...data
+    });
 
-    const node = gun.get(`wiki-plugin/${instance}/${page}`).put(data);
-    gun.get('wikis').get(instance).get(page).set(node);
-    console.log(pages.value)
+    const node = gun.get(`wiki-plugin/${instance}/${count.value}`).put({
+      page: count.value,
+      ...data
+    });
+    gun.get('wikis').get(instance).set(node);
+    console.log(count.value)
 
     return node;
+  }
+
+  const setPage = async (pageNumber: number) => {
+    wiki.value = pages.value.find(x => x.page === pageNumber)
+
+    return page.value;
   }
 
   const editPage = async (data: Profile) => {
@@ -26,31 +38,29 @@ export function wikiProvider(
   }
 
   const removePage = async (id: string) => {
-    if (gun.user().is) {
-      const node = gun.user().get(`wiki/${id}`);
-      node.then(() => {
-        gun.user().get('wikis').unset(node);
-        gun.get('wikis').get(id).unset(node);
-        wiki.value = null;
-      });
-    }
+    const node = gun.get(`wiki/${instance}/${id}`);
+    node.then(() => {
+      gun.get('wikis').get(id).unset(node);
+      wiki.value = null;
+    });
   }
 
   onMounted(() => {
-    gun.user()
-    .get('wikis')
+    gun.get('wikis')
+    .get(instance)
     .map()
     .once((data) => {
-      if (data && data.id === id) {
-        wiki.value = data;
+      if (data) {
+        pages.value.push(data);
       }
     });
   });
 
   provide('wiki', {
-    page,
+    wiki,
     pages,
     createPage,
+    setPage,
     editPage,
     removePage,
   });
