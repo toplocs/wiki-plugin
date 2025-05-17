@@ -2,29 +2,7 @@
   <div class="p-6 border rounded-lg bg-gray-50 border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white">
     <Title>{{ wiki?.title }}</Title>
 
-    <div v-if="wikiId">
-      <div v-if="wiki?.interests.length">
-        <div class="mt-2 flex flex-wrap gap-2">
-          <span v-for="interest in wiki?.interests">
-            <InterestBadge
-              :key="interest.id"
-              :title="interest.title"
-            />
-          </span>
-        </div>
-      </div>
-
-      <div v-if="wiki?.locations.length">
-        <div class="mt-2 flex flex-wrap gap-2">
-          <span v-for="location in wiki?.locations">
-            <LocationBadge
-              :key="location.id"
-              :title="location.title"
-            />
-          </span>
-        </div>
-      </div>
-
+    <div v-if="content.length">
       <div v-if="isEditing" class="mt-4 wiki-editor">
         <Callout v-if="successMessage" color="green">
           {{ successMessage }}
@@ -68,7 +46,7 @@
       </div>
     </div>
 
-    <span v-else>There is no wiki yet</span>
+    <span v-else>There is no content available</span>
   </div>
 </template>
 
@@ -86,10 +64,10 @@ const form = ref<HTMLFormElement | null>(null);
 const successMessage = ref('');
 const errorMessage = ref('');
 const isEditing = ref(false);
-const content = ref(null);
+const content = ref('');
 
 watchEffect(async () => {
-  if (props.wikiId) wiki.value = await fetchWiki(props.wikiId);
   content.value = JSON.parse(wiki.value?.content || '{}');
+  console.log(content.value);
 });
 </script>
