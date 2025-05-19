@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 border rounded-lg bg-gray-50 border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white">
+  <div class="p-6 border rounded-lg bg-white border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white">
     <Title>{{ wiki?.title }}</Title>
 
     <div v-if="content.length">
@@ -14,9 +14,8 @@
         <form
           ref="form"
           @submit.prevent="onSubmit"
+          class="w-full bg-white-500"
         >
-          <input type="hidden" name="wikiId" :value="wiki?.id" />
-
           <WikiEdit v-model="content" />
         
           <div class="mt-2 space-x-2">
@@ -59,15 +58,35 @@ import InterestBadge from '@/components/badges/InterestBadge.vue';
 import WikiEdit from './WikiEdit.vue';
 import { useWiki } from '@/composables/wikiProvider';
 
-const { wiki } = useWiki();
+const { wiki, editPage } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
+const isEditing = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
-const isEditing = ref(false);
 const content = ref('');
+
+const editContent = () => {
+  isEditing.value = true;
+};
+
+const cancelEdit = () => {
+  isEditing.value = false;
+};
+
+const onSubmit = async () => {
+  try {
+    const formData = new FormData(form.value ?? undefined);
+    formData.append('content', JSON.stringify(content.value));
+    console.log(formData.entries())
+    const node = await editPage(formData);
+    successMessage.value = 'Wiki content was saved successfully!';
+  } catch (error) {
+    console.error(error);
+    errorMessage.value = error.response.data;
+  }
+}
 
 watchEffect(async () => {
   content.value = JSON.parse(wiki.value?.content || '{}');
-  console.log(content.value);
 });
 </script>

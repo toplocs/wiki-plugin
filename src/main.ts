@@ -8,11 +8,14 @@ chain.once(data => {
 	if (!data) {
 		const node = chain.put({
 			id: 'wiki_plugin',
-			url: 'http://localhost:3002',
+			name: 'Wiki',
+			url: 'http://localhost:3002/assets/plugin.js',
+			path: '/wiki',
+			component: 'WikiView',
 		});
 		gun.get('plugins').set(node);
 
-		console.log('Wiki plugin has been added to the gun plugin list')
+		console.log('Wiki plugin has been added to the gun plugin list', node);
 	}
 });
 

@@ -20,7 +20,6 @@ export function wikiProvider(
       ...data
     });
     gun.get('wikis').get(instance).set(node);
-    console.log(count.value)
 
     return node;
   }
@@ -28,13 +27,19 @@ export function wikiProvider(
   const setPage = async (pageNumber: number) => {
     wiki.value = pages.value.find(x => x.page === pageNumber)
 
-    return page.value;
+    return wiki.value;
   }
 
-  const editPage = async (data: Profile) => {
-    wiki.value = data;
+  const editPage = async (formData: FormData) => {
+    wiki.value = {
+      ...wiki.value,
+      content: formData.get('content'),
+    }
+    const node = gun.get(`wiki-plugin/${instance}/${wiki.value?.page}`);
+    node.put(wiki.value);
+    console.log(wiki.value?.page);
 
-    return wiki.value;
+    return node;
   }
 
   const removePage = async (id: string) => {
