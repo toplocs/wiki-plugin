@@ -14,8 +14,8 @@ export function wikiProvider(
     data.id = id;
     pages.value.push(data);
 
-    const node = gun.get(`wiki-plugin_1/${instance}/${id}`).put(data);
-    gun.get('wikis_1').get(instance).set(node);
+    const node = gun.get(`wiki-plugin/${instance}/${id}`).put(data);
+    gun.get('wikis').get(instance).set(node);
     wiki.value = data;
 
     return node;
@@ -37,15 +37,15 @@ export function wikiProvider(
   }
 
   const removePage = async (id: string) => {
-    const node = gun.get(`wiki-plugin_1/${instance}/${id}`);
+    const node = gun.get(`wiki-plugin/${instance}/${id}`);
     node.then(() => {
-      gun.get('wikis_1').get(instance).unset(node);
+      gun.get('wikis').get(instance).unset(node);
     });
     wiki.value = null;
   }
 
   onMounted(() => {
-    gun.get('wikis_1')
+    gun.get('wikis')
     .get(instance)
     .map()
     .once((data) => {
@@ -59,7 +59,7 @@ export function wikiProvider(
   });
 
   onUnmounted(() => {
-    gun.get('wikis_1')
+    gun.get('wikis')
     .get(instance)
     .map()
     .off();
