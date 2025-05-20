@@ -26,6 +26,6 @@ import { useWiki } from '@/composables/wikiProvider';
 const { pages, setPage } = useWiki();
 
 const handleSelect = async (data: Object) => {
-  const result = await setPage(data.page);
+  const result = await setPage(data.id);
 }
 </script>

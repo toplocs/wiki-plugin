@@ -9,56 +9,60 @@ export function wikiProvider(
   const count = computed(() => pages.value.length)
 
   const createPage = async (formData: FormData) => {
+    const id = crypto.randomUUID();
     const data = Object.fromEntries(formData.entries());
-    pages.value.push({
-      page: count.value,
-      ...data
-    });
+    data.id = id;
+    pages.value.push(data);
 
-    const node = gun.get(`wiki-plugin/${instance}/${count.value}`).put({
-      page: count.value,
-      ...data
-    });
-    gun.get('wikis').get(instance).set(node);
+    const node = gun.get(`wiki-plugin_1/${instance}/${id}`).put(data);
+    gun.get('wikis_1').get(instance).set(node);
+    wiki.value = data;
 
     return node;
   }
 
-  const setPage = async (pageNumber: number) => {
-    wiki.value = pages.value.find(x => x.page === pageNumber)
+  const setPage = async (id: string) => {
+    wiki.value = pages.value.find(x => x.id === id);
 
     return wiki.value;
   }
 
   const editPage = async (formData: FormData) => {
-    wiki.value = {
-      ...wiki.value,
-      content: formData.get('content'),
-    }
-    const node = gun.get(`wiki-plugin/${instance}/${wiki.value?.page}`);
-    node.put(wiki.value);
-    console.log(wiki.value?.page);
+    const id = wiki.value?.id;
+    pages.value = pages.value.filter(x => x.id !== id);
+    await removePage(id);
+    const node = await createPage(formData);
 
     return node;
   }
 
   const removePage = async (id: string) => {
-    const node = gun.get(`wiki/${instance}/${id}`);
+    const node = gun.get(`wiki-plugin_1/${instance}/${id}`);
     node.then(() => {
-      gun.get('wikis').get(id).unset(node);
-      wiki.value = null;
+      gun.get('wikis_1').get(instance).unset(node);
     });
+    wiki.value = null;
   }
 
   onMounted(() => {
-    gun.get('wikis')
+    gun.get('wikis_1')
     .get(instance)
     .map()
     .once((data) => {
       if (data) {
-        pages.value.push(data);
+        const exists = pages.value.some(x => x.id === data.id);
+        if (!exists) {
+         pages.value.push(data);
+        }
       }
     });
+  });
+
+  onUnmounted(() => {
+    gun.get('wikis_1')
+    .get(instance)
+    .map()
+    .off();
   });
 
   provide('wiki', {

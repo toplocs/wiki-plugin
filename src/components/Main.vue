@@ -76,8 +76,8 @@ const cancelEdit = () => {
 const onSubmit = async () => {
   try {
     const formData = new FormData(form.value ?? undefined);
+    formData.append('title', wiki.value?.title);
     formData.append('content', JSON.stringify(content.value));
-    console.log(formData.entries())
     const node = await editPage(formData);
     successMessage.value = 'Wiki content was saved successfully!';
   } catch (error) {
@@ -87,6 +87,8 @@ const onSubmit = async () => {
 }
 
 watchEffect(async () => {
+  successMessage.value = '';
+  errorMessage.value = '';
   content.value = JSON.parse(wiki.value?.content || '{}');
 });
 </script>
