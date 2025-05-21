@@ -1,7 +1,7 @@
 <template>
-  <WikiView />
+  <WikiView parentId="test" />
 
-  <WikiCreateView />
+  <WikiCreateView parentId="test" />
 </template>
 
 <script setup lang="ts">
@@ -15,5 +15,4 @@ import { wikiProvider } from './composables/wikiProvider';
 const tab = ref('Wiki');
 
 provide('tab', tab);
-//wikiProvider('9138e908-b6e3-4bfa-b34f-960a0e703500');
 </script>

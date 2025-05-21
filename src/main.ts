@@ -10,14 +10,19 @@ chain.once(data => {
 			id: 'wiki_plugin',
 			name: 'Wiki',
 			url: 'http://localhost:3002/assets/plugin.js',
-			path: '/wiki',
-			component: 'WikiView',
 		});
+
+		const paths = gun.get('plugin/wiki_plugin/paths');
+		paths.set({ path: 'wiki', component: 'WikiView' });
+		paths.set({ path: 'wiki/create', component: 'WikiCreate' });
+		
+		node.get('paths').put(paths);
 		gun.get('plugins').set(node);
 
 		console.log('Wiki plugin has been added to the gun plugin list', node);
 	}
 });
+
 
 const app = createApp(App)
 
