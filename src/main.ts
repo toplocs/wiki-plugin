@@ -18,11 +18,12 @@ chain.once(data => {
 		paths.set({ path: 'settings/wiki', component: 'WikiSetting' });
 
 		const slots = gun.get('wiki_plugin/slots');
-		paths.set({ slot: 'tab', component: 'WikiView' });
-		paths.set({ slot: 'InfoView', component: 'WikiView' });
+		slots.set({ slot: 'tab', component: 'WikiTab' });
+		slots.set({ slot: 'InfoView', component: 'Sidebar' });
 
 		
 		node.get('paths').put(paths);
+		node.get('slots').put(slots);
 		gun.get('plugins').set(node);
 
 		console.log('Wiki plugin has been added to the gun plugin list', node);
