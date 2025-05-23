@@ -13,7 +13,7 @@ export default defineConfig({
         exposes: {
           './WikiView': './src/views/WikiView.vue',
           './WikiCreate': './src/views/WikiCreate.vue',
-          //'./InfoSidebar': './src/components/InfoSidebar.vue',
+          './Sidebar': './src/components/Sidebar.vue',
         },
         shared: ['vue']
     }),
