@@ -45,7 +45,9 @@
       </div>
     </div>
 
-    <span v-else>There is no content available</span>
+    <span v-else>
+      There is no content available
+    </span>
   </div>
 </template>
 
@@ -53,12 +55,13 @@
 import { ref, computed, watchEffect } from 'vue';
 import Title from '@/components/common/Title.vue';
 import Callout from '@/components/common/Callout.vue';
-import LocationBadge from '@/components/badges/LocationBadge.vue';
-import InterestBadge from '@/components/badges/InterestBadge.vue';
 import WikiEdit from './WikiEdit.vue';
 import { useWiki } from '@/composables/wikiProvider';
 
-const { wiki, editPage } = useWiki();
+const props = defineProps({
+  query: String
+});
+const { wiki, setPage, editPage } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
 const isEditing = ref(false);
 const successMessage = ref('');
@@ -85,6 +88,10 @@ const onSubmit = async () => {
     errorMessage.value = error.response.data;
   }
 }
+
+watchEffect(async () => {
+  const result = await setPage(props.query?.page);
+});
 
 watchEffect(async () => {
   successMessage.value = '';

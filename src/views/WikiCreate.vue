@@ -20,7 +20,7 @@ import WikiForm from '@/components/WikiForm.vue';
 import { wikiProvider } from '@/composables/wikiProvider';
 
 const props = defineProps({
-  parentId: String
+  parentId: String,
 });
 
 wikiProvider(props.parentId);

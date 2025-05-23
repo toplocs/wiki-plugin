@@ -3,7 +3,7 @@ import App from './App.vue';
 import './assets/main.css';
 import gun from './gun';
 
-const chain = gun.get('plugin/wiki_plugin');
+const chain = gun.get('wiki_plugin');
 chain.once(data => {
 	if (!data) {
 		const node = chain.put({
@@ -12,9 +12,15 @@ chain.once(data => {
 			url: 'http://localhost:3002/assets/plugin.js',
 		});
 
-		const paths = gun.get('plugin/wiki_plugin/paths');
+		const paths = gun.get('wiki_plugin/paths');
 		paths.set({ path: 'wiki', component: 'WikiView' });
 		paths.set({ path: 'wiki/create', component: 'WikiCreate' });
+		paths.set({ path: 'settings/wiki', component: 'WikiSetting' });
+
+		const slots = gun.get('wiki_plugin/slots');
+		paths.set({ slot: 'tab', component: 'WikiView' });
+		paths.set({ slot: 'InfoView', component: 'WikiView' });
+
 		
 		node.get('paths').put(paths);
 		gun.get('plugins').set(node);

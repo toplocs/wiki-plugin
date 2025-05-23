@@ -26,7 +26,6 @@
         />
       </div>
 
-      <!--
       <div class="mb-2">
         <AddInterests v-model="interests" />
       </div>
@@ -34,7 +33,6 @@
       <div class="mb-2">
         <AddLocations v-model="locations" />
       </div>
-      -->
 
       <WikiEdit v-model="content" />
 

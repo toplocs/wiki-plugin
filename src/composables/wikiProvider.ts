@@ -2,7 +2,7 @@ import { ref, inject, provide, computed, onMounted, onUnmounted } from 'vue';
 import gun from '../gun';
 
 export function wikiProvider(
-  instance: string,
+  instance: string, //637a553d-50c7-4101-b3b0-736727fe5e7e
 ) {
   const wiki = ref(null);
   const pages = ref([]);
@@ -14,8 +14,9 @@ export function wikiProvider(
     data.id = id;
     pages.value.push(data);
 
-    const node = gun.get(`wiki-plugin/${instance}/${id}`).put(data);
-    gun.get('wikis').get(instance).set(node);
+    const node = gun.get(`wiki-plugin/${id}`).put(data); //put data
+    gun.get('wikis').get(instance).set(node); //set relations
+    //gun.get('wikis').get(other topic).set(node);
     wiki.value = data;
 
     return node;
@@ -37,7 +38,7 @@ export function wikiProvider(
   }
 
   const removePage = async (id: string) => {
-    const node = gun.get(`wiki-plugin/${instance}/${id}`);
+    const node = gun.get(`wiki-plugin/${id}`);
     node.then(() => {
       gun.get('wikis').get(instance).unset(node);
     });

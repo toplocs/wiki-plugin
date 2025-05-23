@@ -1,16 +1,14 @@
 <template>
   <WikiView parentId="test" />
 
-  <WikiCreateView parentId="test" />
+  <WikiCreate parentId="test" />
 </template>
 
 <script setup lang="ts">
 import './assets/main.css';
-import { ref, inject, provide } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, provide } from 'vue';
 import WikiView from './views/WikiView.vue';
-import WikiCreateView from './views/WikiCreateView.vue';
-import { wikiProvider } from './composables/wikiProvider';
+import WikiCreate from './views/WikiCreate.vue';
 
 const tab = ref('Wiki');
 

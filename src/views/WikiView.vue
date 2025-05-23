@@ -1,10 +1,10 @@
 <template>
   <Container>
     <div class="w-full mr-4">
-      <WikiPlugin />
+      <WikiPlugin :query="query" />
     </div>
 
-    <Sidebar />
+    <Sidebar :parentId="props.parentId" />
   </Container>
 </template>
 
@@ -17,7 +17,8 @@ import WikiPlugin from '@/components/Main.vue';
 import { wikiProvider } from '@/composables/wikiProvider';
 
 const props = defineProps({
-  parentId: String
+  parentId: String,
+  query: Object,
 });
 
 wikiProvider(props.parentId);
