@@ -1,30 +1,8 @@
 <template>
-  <div class="p-6 border rounded-lg bg-gray-50 border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white">
+  <div class="p-6 border rounded-lg bg-white border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white">
     <Title>{{ wiki?.title }}</Title>
 
-    <div v-if="wikiId">
-      <div v-if="wiki?.interests.length">
-        <div class="mt-2 flex flex-wrap gap-2">
-          <span v-for="interest in wiki?.interests">
-            <InterestBadge
-              :key="interest.id"
-              :title="interest.title"
-            />
-          </span>
-        </div>
-      </div>
-
-      <div v-if="wiki?.locations.length">
-        <div class="mt-2 flex flex-wrap gap-2">
-          <span v-for="location in wiki?.locations">
-            <LocationBadge
-              :key="location.id"
-              :title="location.title"
-            />
-          </span>
-        </div>
-      </div>
-
+    <div v-if="content.length">
       <div v-if="isEditing" class="mt-4 wiki-editor">
         <Callout v-if="successMessage" color="green">
           {{ successMessage }}
@@ -36,9 +14,8 @@
         <form
           ref="form"
           @submit.prevent="onSubmit"
+          class="w-full bg-white-500"
         >
-          <input type="hidden" name="wikiId" :value="wiki?.id" />
-
           <WikiEdit v-model="content" />
         
           <div class="mt-2 space-x-2">
@@ -68,31 +45,28 @@
       </div>
     </div>
 
-    <span v-else>There is no wiki yet</span>
+    <span v-else>
+      There is no content available
+    </span>
   </div>
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { ref, computed, watchEffect } from 'vue';
 import Title from '@/components/common/Title.vue';
 import Callout from '@/components/common/Callout.vue';
-import LocationBadge from '@/components/badges/LocationBadge.vue';
-import InterestBadge from '@/components/badges/InterestBadge.vue';
 import WikiEdit from './WikiEdit.vue';
+import { useWiki } from '@/composables/wikiProvider';
 
 const props = defineProps({
-  wikiId: {
-    type: String,
-    required: true,
-  }
+  query: String
 });
+const { wiki, setPage, editPage } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
+const isEditing = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
-const isEditing = ref(false);
-const wiki = ref(null);
-const content = ref(null);
+const content = ref('');
 
 const editContent = () => {
   isEditing.value = true;
@@ -102,25 +76,13 @@ const cancelEdit = () => {
   isEditing.value = false;
 };
 
-
-const fetchWiki = async (id: String) => {
-  try {
-    const response = await axios.get(`/api/wiki/byId/${id}`);
-
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 const onSubmit = async () => {
   try {
     const formData = new FormData(form.value ?? undefined);
+    formData.append('title', wiki.value?.title);
     formData.append('content', JSON.stringify(content.value));
-    const response = await axios.put(`/api/wiki`, formData);
+    const node = await editPage(formData);
     successMessage.value = 'Wiki content was saved successfully!';
-    
-    return response.data;
   } catch (error) {
     console.error(error);
     errorMessage.value = error.response.data;
@@ -128,7 +90,12 @@ const onSubmit = async () => {
 }
 
 watchEffect(async () => {
-  if (props.wikiId) wiki.value = await fetchWiki(props.wikiId);
+  const result = await setPage(props.query?.page);
+});
+
+watchEffect(async () => {
+  successMessage.value = '';
+  errorMessage.value = '';
   content.value = JSON.parse(wiki.value?.content || '{}');
 });
 </script>

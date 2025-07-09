@@ -1,6 +1,6 @@
 import Gun from 'gun' // You can also use 'gun' here
 import 'gun/sea' // Optional: for user authentication
-//import 'gun/lib/unset'; //optional
+import 'gun/lib/unset'; //optional
 
 const gun = Gun(['http://localhost:3000/gun']);
 

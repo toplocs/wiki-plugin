@@ -1,65 +1,82 @@
-import { ref, inject, provide, watch, onMounted, onUnmounted } from 'vue';
+import { ref, inject, provide, computed, onMounted, onUnmounted } from 'vue';
 import gun from '../gun';
 
 export function wikiProvider(
-  instance: string,
+  instance: string, //637a553d-50c7-4101-b3b0-736727fe5e7e
 ) {
+  const wiki = ref(null);
   const pages = ref([]);
+  const count = computed(() => pages.value.length)
 
   const createPage = async (formData: FormData) => {
+    const id = crypto.randomUUID();
     const data = Object.fromEntries(formData.entries());
-    const email = data.email.toLowerCase();
-    const hash = CryptoJS.SHA256(email).toString(CryptoJS.enc.Hex);
-    wiki.value = {
-      ...data,
-      id: id,
-      image: `https://gravatar.com/avatar/${hash}`,
-    }
+    data.id = id;
+    pages.value.push(data);
 
-    const node = gun.user().get(`wiki/${id}`).put(wiki.value);
-    gun.user().get('wikis').set(node);
-    gun.get('wikis').get(id).set(node);
+    const node = gun.get(`wiki-plugin/${id}`).put(data); //put data
+    gun.get('wikis').get(instance).set(node); //set relations
+    //gun.get('wikis').get(other topic).set(node);
+    wiki.value = data;
+
+    return node;
+  }
+
+  const setPage = async (id: string) => {
+    wiki.value = pages.value.find(x => x.id === id);
 
     return wiki.value;
   }
 
-  const editPage = async (data: Profile) => {
-    wiki.value = data;
+  const editPage = async (formData: FormData) => {
+    const id = wiki.value?.id;
+    pages.value = pages.value.filter(x => x.id !== id);
+    await removePage(id);
+    const node = await createPage(formData);
 
-    return wiki.value;
+    return node;
   }
 
   const removePage = async (id: string) => {
-    if (gun.user().is) {
-      const node = gun.user().get(`wiki/${id}`);
-      node.then(() => {
-        gun.user().get('wikis').unset(node);
-        gun.get('wikis').get(id).unset(node);
-        wiki.value = null;
-      });
-    }
+    const node = gun.get(`wiki-plugin/${id}`);
+    node.then(() => {
+      gun.get('wikis').get(instance).unset(node);
+    });
+    wiki.value = null;
   }
 
   onMounted(() => {
-    gun.user()
-    .get('wikis')
+    gun.get('wikis')
+    .get(instance)
     .map()
     .once((data) => {
-      if (data && data.id === id) {
-        wiki.value = data;
+      if (data) {
+        const exists = pages.value.some(x => x.id === data.id);
+        if (!exists) {
+         pages.value.push(data);
+        }
       }
     });
   });
 
+  onUnmounted(() => {
+    gun.get('wikis')
+    .get(instance)
+    .map()
+    .off();
+  });
+
   provide('wiki', {
     wiki,
-    createWiki,
-    editWiki,
-    removeWiki,
+    pages,
+    createPage,
+    setPage,
+    editPage,
+    removePage,
   });
 }
 
-export function useProfile() {
+export function useWiki() {
   const data = inject('wiki');
 
   if (!data) {

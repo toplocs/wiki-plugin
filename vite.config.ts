@@ -10,10 +10,9 @@ export default defineConfig({
     federation({
         name: 'wiki-plugin',
         filename: 'plugin.js',
-        exposes: { //add config file for routing etc.
+        exposes: {
           './WikiView': './src/views/WikiView.vue',
-          './WikiCreateView': './src/views/WikiCreateView.vue',
-          './Main': './src/components/Main.vue',
+          './WikiCreate': './src/views/WikiCreate.vue',
           './Sidebar': './src/components/Sidebar.vue',
         },
         shared: ['vue']
