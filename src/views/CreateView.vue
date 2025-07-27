@@ -1,23 +1,25 @@
 <template>
   <Container>
-    <div class="w-full mr-4">
-      <WikiPlugin :query="query" />
+    <div class="w-full">
+      <Card className="space-y-4">
+        <Title>
+          Creating a new wiki page:
+        </Title>
+        <WikiForm />
+      </Card>
     </div>
-
-    <Sidebar :parentId="props.parentId" />
   </Container>
 </template>
 
 <script setup lang="ts">
+import Card from '@/components/common/Card.vue';
 import Container from '@/components/common/Container.vue';
-import Sidebar from '@/components/SideBar.vue';
 import Title from '@/components/common/Title.vue';
-import WikiPlugin from '@/components/MainComponent.vue';
+import WikiForm from '@/components/WikiForm.vue';
 import { wikiProvider } from '@/composables/wikiProvider';
 
 const props = defineProps({
   parentId: String,
-  query: Object,
 });
 
 wikiProvider(props.parentId);

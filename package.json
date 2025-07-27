@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "VITE_DEV=true vite",
+    "dev": "VITE_DEV=true vite --port 3006 --open",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
