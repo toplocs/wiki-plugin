@@ -50,7 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { ref, watch } from 'vue';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';

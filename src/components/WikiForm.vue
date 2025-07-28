@@ -26,13 +26,6 @@
         />
       </div>
 
-      <div class="mb-2">
-        <AddInterests v-model="interests" />
-      </div>
-
-      <div class="mb-2">
-        <AddLocations v-model="locations" />
-      </div>
 
       <WikiEdit v-model="content" />
 
@@ -53,8 +46,6 @@ import { useRoute } from 'vue-router';
 import Title from '@/components/common/Title.vue';
 import Callout from '@/components/common/Callout.vue';
 import TextInput from '@/components/common/TextInput.vue';
-import AddInterests from '@/components/AddInterests.vue';
-import AddLocations from '@/components/AddLocations.vue';
 import WikiEdit from '@/components/WikiEdit.vue';
 import { useWiki } from '@/composables/wikiProvider';
 
@@ -63,6 +54,8 @@ const { pages, createPage } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
 const successMessage = ref('');
 const errorMessage = ref('');
+const interests = ref([]);
+const locations = ref([]);
 const content = ref(
   `<h2>
       Welcome to the Wiki
