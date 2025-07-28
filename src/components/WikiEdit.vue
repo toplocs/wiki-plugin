@@ -56,7 +56,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Highlight from '@tiptap/extension-highlight'
 import TextAlign from '@tiptap/extension-text-align'
 import Callout from '@/components/common/Callout.vue';
-import SubmitButton from '@/components/common/SubmitButton.vue';
+// import SubmitButton from '@/components/common/SubmitButton.vue'; // Not used
 
 const props = defineProps({
   modelValue: {
@@ -88,7 +88,7 @@ const editor = useEditor({
 
 watch(() => props.modelValue, (newValue) => {
   if (editor.value && editor.value.getHTML() !== newValue) {
-    editor.value.commands.setContent(newValue, false)
+    editor.value.commands.setContent(newValue || '', false)
   }
 })
 </script>

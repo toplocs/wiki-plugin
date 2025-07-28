@@ -58,9 +58,9 @@ import Callout from '@/components/common/Callout.vue';
 import WikiEdit from './WikiEdit.vue';
 import { useWiki } from '@/composables/wikiProvider';
 
-const props = defineProps({
-  query: String
-});
+const props = defineProps<{
+  query?: { page?: string }
+}>();
 const { wiki, setPage, editPage } = useWiki();
 const form = ref<HTMLFormElement | null>(null);
 const isEditing = ref(false);
@@ -79,23 +79,35 @@ const cancelEdit = () => {
 const onSubmit = async () => {
   try {
     const formData = new FormData(form.value ?? undefined);
-    formData.append('title', wiki.value?.title);
+    if (wiki.value?.title) {
+      formData.append('title', wiki.value.title);
+    }
     formData.append('content', JSON.stringify(content.value));
     const node = await editPage(formData);
     successMessage.value = 'Wiki content was saved successfully!';
   } catch (error) {
     console.error(error);
-    errorMessage.value = error.response.data;
+    errorMessage.value = error instanceof Error ? error.message : String(error);
   }
 }
 
 watchEffect(async () => {
-  const result = await setPage(props.query?.page);
+  if (props.query?.page) {
+    const result = await setPage(props.query.page);
+  }
 });
 
 watchEffect(async () => {
   successMessage.value = '';
   errorMessage.value = '';
-  content.value = JSON.parse(wiki.value?.content || '{}');
+  if (wiki.value?.content) {
+    try {
+      content.value = JSON.parse(wiki.value.content);
+    } catch (e) {
+      content.value = '';
+    }
+  } else {
+    content.value = '';
+  }
 });
 </script>

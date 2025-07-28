@@ -104,7 +104,7 @@ const onSubmit = async () => {
     successMessage.value = 'Wiki content was saved successfully!';
   } catch (error) {
     console.error(error);
-    errorMessage.value = error.response.data;
+    errorMessage.value = error instanceof Error ? error.message : String(error);
   }
 }
 </script>

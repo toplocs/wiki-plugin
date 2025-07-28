@@ -12,5 +12,9 @@ const props = defineProps({
 });
 
 console.log("SideBar instance: ", props.parentId);
-wikiProvider(props.parentId ?? 'test');
+if (props.parentId) {
+  wikiProvider(props.parentId);
+} else {
+  wikiProvider('test');
+}
 </script>

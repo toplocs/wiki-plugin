@@ -27,14 +27,16 @@ const props = defineProps({
 });
 
 const isOpen = ref(false);
-const dropdown = inject('dropdown');
+const dropdown = inject<{ value: string }>('dropdown');
 const dropdownClass = computed(() => 
   `absolute right-0 max-h-80 overflow-y-auto z-10 mt-1 ring-1 rounded-sm bg-white cursor-pointer dark:bg-gray-800 ring-gray-300 dark:ring-gray-700 shadow-md dark:shadow-lg border-transparent dark:border-gray-600 dark:text-white ${props.className}`
 );
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
-  dropdown.value = props.name;
+  if (dropdown) {
+    dropdown.value = props.name;
+  }
 };
 
 const closeDropdown = () => {
@@ -42,6 +44,6 @@ const closeDropdown = () => {
 };
 
 watchEffect(() => {
-  if (dropdown.value != props.name) closeDropdown();
+  if (dropdown && dropdown.value != props.name) closeDropdown();
 });
 </script>

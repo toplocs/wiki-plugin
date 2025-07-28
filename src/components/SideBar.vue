@@ -7,7 +7,7 @@
       :key="page.id"
       :to="`${href}?page=${page.id}`"
     >
-      <WikiListItem :title="page.title" />
+      <WikiListItem :title="page.title || 'Untitled'" />
     </router-link>
 
     <router-link

@@ -66,9 +66,9 @@ const props = defineProps({
 });
 
 const inputValue = ref('');
-const selectedOption = ref(null);
+const selectedOption = ref<{ id: number; title: string } | null>(null);
 const isOpen = ref(false);
-const filteredOptions = ref([]);
+const filteredOptions = ref<Array<{ id: number; title: string; parent?: any }>>([]);
 const selectContainer = ref<HTMLElement | null>(null);
 const emit = defineEmits<{
   (event: 'update:modelValue', value: { id: number; title: string } | string): void;
