@@ -3,34 +3,7 @@
  * This file defines the plugin configuration and exports it for use in TopLocs
  */
 
-interface BasePluginConfig {
-  id: string;
-  name: string;
-  url: string;
-  version?: string;
-  description?: string;
-  author?: string;
-  slots: Array<PluginSlot>;
-  paths?: Array<PluginPath>;
-  tabs?: Array<PluginTab>;
-}
-
-interface PluginSlot {
-  entity: string;
-  page: string;
-  slot: string;
-  component: string;
-}
-
-interface PluginPath {
-  url: string;
-  component: string;
-}
-
-interface PluginTab {
-  value: string;
-  href: string;
-}
+import type { BasePluginConfig } from '@toplocs/plugin-sdk'
 
 const pluginConfig: BasePluginConfig = {
   id: 'wiki_plugin',
