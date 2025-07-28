@@ -9,7 +9,7 @@
     <button
       type="button"
       aria-controls="select-options"
-      :aria-expanded="isOpen.toString()"
+      :aria-expanded="String(isOpen)"
       aria-autocomplete="none"
       @click="toggleDropdown"
       class="group flex w-full items-center justify-between gap-2 truncate rounded-md border px-3 py-2 shadow-sm outline-none transition sm:text-sm border-gray-300 dark:border-gray-800 text-gray-900 dark:text-gray-50 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-900/50 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 dark:focus:ring-blue-700 dark:focus:border-blue-700"
