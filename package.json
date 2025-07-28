@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_DEV=true vite --port 3006 --open",
-    "build": "run-p type-check \"build-only {@}\" -- && mv dist/landing.html dist/index.html",
+    "build": "run-p type-check \"build-only {@}\" -- && mv dist/landing.html dist/index.html && touch dist/.nojekyll",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
