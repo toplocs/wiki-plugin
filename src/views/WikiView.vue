@@ -12,7 +12,7 @@
 import Container from '@/components/common/Container.vue';
 import Sidebar from '@/components/SideBar.vue';
 import Title from '@/components/common/Title.vue';
-import WikiPlugin from '@/components/MainComponent.vue';
+import WikiPlugin from '@/components/Main.vue';
 import { wikiProvider } from '@/composables/wikiProvider';
 
 const props = defineProps({
