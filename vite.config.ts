@@ -3,51 +3,70 @@ import path from 'path';
 import vue from '@vitejs/plugin-vue';
 import federation from "@originjs/vite-plugin-federation";
 import topLevelAwait from 'vite-plugin-top-level-await';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
   plugins: [
     vue(),
     federation({
-        name: 'wiki-plugin',
-        filename: 'plugin.js',
-        exposes: {
-          './WikiView': './src/views/WikiView.vue',
-          './WikiCreate': './src/views/WikiCreate.vue',
-          './Sidebar': './src/components/Sidebar.vue',
-        },
-        shared: ['vue']
+      name: 'wiki-plugin',
+      filename: 'plugin.js',
+      exposes: {
+        './PluginConfig': './src/index.ts',
+        './MainView': './src/views/MainView.vue',
+        './SidebarView': './src/views/SidebarView.vue',
+        './SettingsView': './src/views/SettingsView.vue',
+        './WikiView': './src/views/WikiView.vue',
+        './CreateView': './src/views/CreateView.vue',
+      },
+      shared: ['vue', 'tailwindcss'],
+      remotes: {
+        remoteName: '',
+      },
     }),
     topLevelAwait({
       promiseExportName: '__tla',
       promiseImportName: i => `__tla_${i}`
     })
   ],
+
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss,
+        autoprefixer,
+      ],
+    },
+  },
+  
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  /*server: {
-    port: 3000,
-  },*/
-  /*define: {
-    'process.env': {},
-  },*/
+
+  optimizeDeps: {
+    exclude: ["__federation__"],
+  },
+
+  server: {
+    port: 3006,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+    },
+  },
+  
   build: {
-    outDir: './server/views',
-    /*lib: {
-      entry: 'src/main.ts', // Entry point for the plugin
-      name: 'ChatPlugin',
-      fileName: (format) => `ChatPlugin.${format}.js`
-    },*/
-    /*rollupOptions: {
-      // Ensure the component can be imported by the main app
-      external: ['vue'],
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false,
+    rollupOptions: {
       output: {
-        globals: {
-          vue: 'Vue'
-        }
-      }
-    }*/
-  }
+        format: 'esm',
+        entryFileNames: '[name].js',
+      },
+    },
+  },
 });
