@@ -14,14 +14,8 @@
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  remove: {
-    type: Function,
-    required: false,
-  },
-});
+const props = defineProps<{
+  title: string;
+  remove?: (event: MouseEvent) => void;
+}>();
 </script>

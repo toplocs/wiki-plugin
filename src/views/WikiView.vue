@@ -20,5 +20,7 @@ const props = defineProps({
   query: Object,
 });
 
-wikiProvider(props.parentId);
+if (props.parentId) {
+  wikiProvider(props.parentId);
+}
 </script>

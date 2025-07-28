@@ -23,5 +23,7 @@ const props = defineProps({
   parentId: String,
 });
 
-wikiProvider(props.parentId);
+if (props.parentId) {
+  wikiProvider(props.parentId);
+}
 </script>

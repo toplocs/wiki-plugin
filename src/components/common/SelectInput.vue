@@ -9,7 +9,7 @@
     <button
       type="button"
       aria-controls="select-options"
-      aria-expanded="isOpen.toString()"
+      :aria-expanded="isOpen.toString()"
       aria-autocomplete="none"
       @click="toggleDropdown"
       class="group flex w-full items-center justify-between gap-2 truncate rounded-md border px-3 py-2 shadow-sm outline-none transition sm:text-sm border-gray-300 dark:border-gray-800 text-gray-900 dark:text-gray-50 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-900/50 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 dark:focus:ring-blue-700 dark:focus:border-blue-700"
@@ -43,29 +43,24 @@
 import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
 import { ChevronDownIcon } from '@heroicons/vue/24/outline';
 
-const props = defineProps({
-  options: {
-    type: Array,
-    required: true
-  },
-  placeholder: {
-    type: String,
-    default: 'Select'
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  modelValue: {
-    type: String,
-    required: true,
-  },
-});
+interface SelectOption {
+  id: string;
+  label: string;
+}
+
+const props = defineProps<{
+  options: SelectOption[];
+  placeholder?: string;
+  name: string;
+  modelValue: string;
+}>();
+
+const { placeholder = 'Select' } = props;
 
 const emit = defineEmits(['update:modelValue']);
 const isOpen = ref(false);
-const selectedOption = ref(null);
-const selectContainer = ref(null);
+const selectedOption = ref<string | null>(null);
+const selectContainer = ref<HTMLDivElement | null>(null);
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
@@ -77,8 +72,8 @@ const selectOption = (optionId: string) => {
   isOpen.value = false;
 };
 
-const handleClickOutside = (event) => {
-  if (selectContainer.value && !selectContainer.value.contains(event.target)) {
+const handleClickOutside = (event: MouseEvent) => {
+  if (selectContainer.value && !selectContainer.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
 };

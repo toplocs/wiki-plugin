@@ -5,7 +5,13 @@
 
 import type { BasePluginConfig } from '@toplocs/plugin-sdk'
 
-const pluginConfig: BasePluginConfig = {
+// Extended plugin config that includes paths and tabs
+interface ExtendedPluginConfig extends BasePluginConfig {
+  paths?: Array<{ url: string; component: string }>;
+  tabs?: Array<{ value: string; href: string }>;
+}
+
+const pluginConfig: ExtendedPluginConfig = {
   id: 'wiki_plugin',
   name: 'Wiki',
   url: 'http://localhost:3006/assets/plugin.js',
