@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "build-only": "vite build",
+    "build-only": "vite build && cp public/plugin-info.html server/views/index.html",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "lint:fix": "eslint . --fix",
