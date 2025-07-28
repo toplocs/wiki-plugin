@@ -63,6 +63,10 @@ export default defineConfig({
     minify: false,
     cssCodeSplit: false,
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        landing: path.resolve(__dirname, 'landing.html')
+      },
       output: {
         format: 'esm',
         entryFileNames: '[name].js',

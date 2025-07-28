@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_DEV=true vite --port 3006 --open",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-p type-check \"build-only {@}\" -- && mv dist/landing.html dist/index.html",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -20,7 +20,7 @@
     "@tiptap/extension-text-align": "^2.9.1",
     "@tiptap/starter-kit": "^2.9.1",
     "@tiptap/vue-3": "^2.9.1",
-    "@toplocs/plugin-sdk": "^1.0.0",
+    "@toplocs/plugin-sdk": "^1.1.0",
     "axios": "^1.7.7",
     "gun": "^0.2020.1240",
     "vite-plugin-top-level-await": "^1.4.4",
