@@ -14,7 +14,7 @@ interface ExtendedPluginConfig extends BasePluginConfig {
 const pluginConfig: ExtendedPluginConfig = {
   id: 'wiki_plugin',
   name: 'Wiki',
-  url: 'http://localhost:3006/assets/plugin.js',
+  url: 'https://toplocs.github.io/wiki-plugin/assets/plugin.js',
   version: '1.0.0',
   description: 'Share and organize wikis within TopLocs spheres',
   author: 'TopLocs Team',
