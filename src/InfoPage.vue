@@ -51,10 +51,14 @@ const features = [
   }
 ]
 
+// Compute base URL from current location
+const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '')
+const isDevelopment = window.location.hostname === 'localhost'
+
 const endpoints = {
-  plugin: 'http://localhost:3006/assets/plugin.js',
-  landing: 'https://toplocs.github.io/wiki-plugin',
-  demo: 'http://localhost:3000'
+  plugin: `${baseUrl}/assets/plugin.js`,
+  landing: baseUrl,
+  demo: 'https://toplocs.github.io/tribelike/'
 }
 
 const development = {
@@ -62,7 +66,7 @@ const development = {
   setup: `pnpm install && pnpm dev`,
   urls: [
     { label: 'GitHub Repository', url: 'https://github.com/toplocs/wiki-plugin' },
-    { label: 'Plugin Development', url: 'http://localhost:3006' }
+    { label: isDevelopment ? 'Local Development' : 'Plugin Landing Page', url: baseUrl }
   ]
 }
 
