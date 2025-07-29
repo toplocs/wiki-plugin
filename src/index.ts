@@ -11,10 +11,12 @@ interface ExtendedPluginConfig extends BasePluginConfig {
   tabs?: Array<{ value: string; href: string }>;
 }
 
+const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '')
+
 const pluginConfig: ExtendedPluginConfig = {
   id: 'wiki_plugin',
   name: 'Wiki',
-  url: 'http://localhost:3006/assets/plugin.js',
+  url: `${baseUrl}/plugin.js`,
   version: '1.0.0',
   description: 'Share and organize wikis within TopLocs spheres',
   author: 'TopLocs Team',
