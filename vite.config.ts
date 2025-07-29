@@ -63,6 +63,8 @@ export default defineConfig({
     target: 'esnext',
     minify: false,
     cssCodeSplit: false,
+    outDir: './dist',
+    assetsDir: '',
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
